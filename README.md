@@ -1,1 +1,1 @@
-Simple API client for advcash.com API client.
+Simple API client for advcash.com API.
