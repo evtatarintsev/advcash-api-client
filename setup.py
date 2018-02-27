@@ -3,7 +3,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 __author__ = 'Evgeny Tatarintsev'
-__version__ = '0.2'
+__version__ = '0.2.1'
 
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 

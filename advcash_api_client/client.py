@@ -2,7 +2,6 @@ from hashlib import sha256
 from datetime import datetime
 from zeep.client import Client
 from typing import Any
-from typing import Union
 
 
 class AvdCashAPIClient:
@@ -15,8 +14,6 @@ class AvdCashAPIClient:
     UAH = 'UAH'
     KZT = 'KZT'
     BRL = 'BRL'
-
-    CURRENCIES = Union[USD, RUR, EUR, GBP, UAH, KZT, BRL]
 
     def __init__(self, api_name: str, api_secret: str, account_email: str):
         self.api_name = api_name
@@ -54,7 +51,7 @@ class AvdCashAPIClient:
         response = self.make_request('getBalances')
         return {i['id']: i['amount'] for i in response}
 
-    def send_money(self, to: str, amount: Any, currency: CURRENCIES, note: str='') -> str:
+    def send_money(self, to: str, amount: Any, currency: str, note: str='') -> str:
         """
         :param to: str account number or email
         :param amount: Any with 2 point precisions
