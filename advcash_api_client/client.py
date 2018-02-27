@@ -56,7 +56,7 @@ class AvdCashAPIClient:
 
     def send_money(self, to: str, amount: Any, currency: CURRENCIES, note: str='') -> str:
         """
-        :param to: str account number or email 
+        :param to: str account number or email
         :param amount: Any with 2 point precisions
         :param currency: str one of available currencies
         :param note: str note for transaction
