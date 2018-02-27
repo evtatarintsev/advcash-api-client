@@ -1,10 +1,22 @@
 from hashlib import sha256
 from datetime import datetime
 from zeep.client import Client
+from typing import Any
+from typing import Union
 
 
 class AvdCashAPIClient:
     wsdl = 'https://wallet.advcash.com/wsm/merchantWebService?wsdl'
+
+    USD = 'USD'
+    RUR = 'RUR'
+    EUR = 'EUR'
+    GBP = 'GBP'
+    UAH = 'UAH'
+    KZT = 'KZT'
+    BRL = 'BRL'
+
+    CURRENCIES = Union[USD, RUR, EUR, GBP, UAH, KZT, BRL]
 
     def __init__(self, api_name: str, api_secret: str, account_email: str):
         self.api_name = api_name
@@ -31,8 +43,33 @@ class AvdCashAPIClient:
 
     def make_request(self, action_name: str, params: dict=None):
         action = getattr(self.client.service, action_name)
+        if params:
+            return action(self.make_auth_params(), params)
         return action(self.make_auth_params())
 
-    def get_balances(self):
+    def get_balances(self) -> dict:
+        """
+        :return: dict {"account number": amount, ...}
+        """
         response = self.make_request('getBalances')
         return {i['id']: i['amount'] for i in response}
+
+    def send_money(self, to: str, amount: Any, currency: CURRENCIES, note: str='') -> str:
+        """
+        :param to: str account number or email 
+        :param amount: Any with 2 point precisions
+        :param currency: str one of available currencies
+        :param note: str note for transaction
+        :return: str transaction id
+        """
+        params = {
+            'amount': amount,
+            'currency': currency,
+            'note': note,
+            'savePaymentTemplate': False
+        }
+        if '@' in to:
+            params.update(email=to)
+        else:
+            params.update(walletId=to)
+        return self.make_request('sendMoney', params)
